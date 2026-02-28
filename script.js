@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const name = form.querySelector('input[type="text"]').value;
             const phone = form.querySelector('input[type="tel"]').value;
             const date = form.querySelector('input[type="date"]').value;
-            const service = form.querySelector('select').value;
+            const service = form.querySelectorAll('input[type="text"]')[1].value;
             const msg = form.querySelector('textarea').value;
 
             const whatsappMsg = `Hola Abel Eventos, me gustaría solicitar disponibilidad:\n\n*Nombre:* ${name}\n*Teléfono:* ${phone}\n*Fecha estimada:* ${date}\n*Tipo de Gala:* ${service}\n*Mensaje:* ${msg}`;
@@ -78,10 +78,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 5. Parallax Hero Media
     const heroMedia = document.querySelector('.hero-media');
-    window.addEventListener('scroll', () => {
-        const scrolled = window.scrollY;
-        if (heroMedia) {
-            heroMedia.style.transform = `translate(-50%, calc(-50% + ${scrolled * 0.4}px))`;
-        }
-    });
+
+    // 6. Mobile Menu Logic
+    const menuToggle = document.querySelector('.menu-toggle');
+    const mobileMenu = document.querySelector('.mobile-menu');
+    const mobileLinks = document.querySelectorAll('.mobile-nav-links a');
+
+    if (menuToggle && mobileMenu) {
+        const main = document.querySelector('main');
+        menuToggle.addEventListener('click', () => {
+            const isOpening = !mobileMenu.classList.contains('active');
+            menuToggle.classList.toggle('active');
+            mobileMenu.classList.toggle('active');
+            document.body.style.overflow = isOpening ? 'hidden' : '';
+            if (main) main.style.visibility = isOpening ? 'hidden' : 'visible';
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                menuToggle.classList.remove('active');
+                mobileMenu.classList.remove('active');
+                document.body.style.overflow = '';
+                if (main) main.style.visibility = 'visible';
+            });
+        });
+    }
+
+    // 7. Mobile VH Fix (for address bar jumping)
+    const setVh = () => {
+        let vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+    window.addEventListener('resize', setVh);
+    setVh();
 });
